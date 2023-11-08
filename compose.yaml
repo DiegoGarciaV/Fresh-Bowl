@@ -1,0 +1,39 @@
+services:
+  mysql-server:
+    image: mysql:latest
+    container_name: mysql-server
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    networks:
+      - my_network
+  mysql-client:
+    image: mysql:latest
+    container_name: mysql-client
+    command: sleep infinity  # Mantener el contenedor en ejecución
+    networks:
+      - my_network
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-server
+    environment:
+      SPRING_DATASOURCE_URL: ${MYSQL_URL}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
