@@ -1,9 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
-<%@page import="java.util.List" %>
-<%@page import="com.freshbowl.model.pojos.InventoryItem" %>
-<%@page import="java.util.Map" %>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>The Fresh Bowl (Inventario)</title>
@@ -52,7 +48,7 @@
             <div class="container px-5">
                 <h2 class="mt-3">Actualización de inventario</h2>
                 
-                <%
+                <!-- <%
                     Map<String,String> errors = (Map<String,String>)request.getAttribute("errors");
                     if(errors!=null)
                     {
@@ -77,16 +73,16 @@
                     String success = (String)request.getAttribute("success-message");
                     if(success!= null && !success.isEmpty())
                     {
-                    %>
+                    %> -->
                     <div class="container success-message px-4 py-3">
                         <h3>Operacion realizada con éxito</h3>
-                        <p><%= success %></p>
+                        <!-- <p><%= success %></p>
                     </div>
                     <%
                     }
                     
                     
-                %>
+                %> -->
                 <form class="row g-3 my-2 w-100" method="post" action="../inventory/form" accept-charset="UTF-8">
                     
                     <div class="col-12 col-lg-6">
