@@ -11,7 +11,7 @@ public class InventoryItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int itemId;
-    protected String itemName;
+    protected String name;
     protected int itemType;
     protected int quantity;
     protected double price;
@@ -29,10 +29,10 @@ public class InventoryItem {
         this.itemId = itemId;
     }
     public String getItemName() {
-        return itemName;
+        return name;
     }
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setItemName(String name) {
+        this.name = name;
     }
     public int getItemType() {
         return itemType;
