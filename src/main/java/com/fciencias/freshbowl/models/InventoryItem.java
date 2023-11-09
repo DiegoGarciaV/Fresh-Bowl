@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class InventoryItem {
@@ -12,16 +14,21 @@ public class InventoryItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int itemId;
     protected String name;
-    protected int itemType;
+    @ManyToOne
+    @JoinColumn(name="item_type")
+    protected ProductType itemType;
     protected int quantity;
     protected double price;
-    protected int unit;
+    @ManyToOne
+    @JoinColumn(name="unit")
+    protected Unit unit;
     protected String img;
     protected String acquisitionDate;
     protected String expiryDate;
     protected String description;
     protected String comments;
     protected String provider;
+
     public int getItemId() {
         return itemId;
     }
@@ -34,10 +41,10 @@ public class InventoryItem {
     public void setItemName(String name) {
         this.name = name;
     }
-    public int getItemType() {
+    public ProductType getItemType() {
         return itemType;
     }
-    public void setItemType(int itemType) {
+    public void setItemType(ProductType itemType) {
         this.itemType = itemType;
     }
     public int getQuantity() {
@@ -52,10 +59,10 @@ public class InventoryItem {
     public void setPrice(double price) {
         this.price = price;
     }
-    public int getUnit() {
+    public Unit getUnit() {
         return unit;
     }
-    public void setUnit(int unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
     public String getImg() {
