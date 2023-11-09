@@ -18,7 +18,7 @@ import com.fciencias.freshbowl.models.InventoryItem;
 import com.fciencias.freshbowl.services.inventory.InventoryService;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/api/inventory")
 public class InventoryController {
 
     private final InventoryService inventoryService;
