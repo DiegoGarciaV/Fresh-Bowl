@@ -1,0 +1,11 @@
+:root
+{
+    --dark-green: rgb(36, 46, 41);
+    --dark-green-75: rgba(36, 46, 41,0.75);
+    --dark-green-50: rgba(36, 46, 41,0.5);
+    --dark-green-25: rgba(36, 46, 41,0.25);
+    
+    --crystal-75: rgba(248,249,250,0.75);
+    --crystal-50: rgba(248,249,250,0.5);
+    --crystal-25: rgba(248,249,250,0.25);
+}
