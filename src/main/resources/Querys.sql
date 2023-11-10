@@ -81,3 +81,23 @@ VALUES              (
                         'Higo fresco',
                         ""
 );
+
+
+INSERT INTO             inventory_item
+                        (name , item_type , quantity , price , img , unit , description ,comments) 
+VALUES                  ('Lechuga ',1,20,20.5,' imgs/ingredients/letuce.png ',1,' ',' '),
+                        ('Jitomate ',1,60,14.9,' imgs/ingredients/tomato.png ',1,' ',' '),
+                        ('Tomate ',1,30,9.9,' imgs/ingredients/tomato.png ',1,' ',' '),
+                        ('Mango ',1,20,35.5,' imgs/ingredients/mango.png ',1,' ',' '),
+                        ('Queso de cabra ',1,2,450,' imgs/ingredients/goat-cheese.png ',1,' ',' '),
+                        ('Pollo ',1,5,198,' imgs/ingredients/chicken-strips.png ',1,' ',' '),
+                        ('Jitomate ',1,60,14.5,' imgs/ingredients/tomato.png ',1,' Jitomate de bola ',' Jitomate de bola perfeto para rebanar '),
+                        ('Langosta ',1,5,850,' imgs/ingredients/lobster-tail.png ',5,' Cola de Langosta ',' Cola de langosta fresca, calidad para ensalada Langosta Delux '),
+                        ('Higo ',1,3,86,' imgs/ingredients/fig.png ',1,' Higo de temporada ',' Excelente Higo '),
+                        ('Piña ',1,4,56,' imgs/ingredients/pinapple.png ',1,' Piña miel ',' PiÃ±a miel extra dulce, perfecta para la ensalada tropical '),
+                        ('Guayaba ',1,20,38,' imgs/ingredients/ ',1,' Guayaba rosa ',' Exquisita Guayaba rosa ideal para una combinacion de citricos o dulcura tropical '),
+                        ('Queso fetta ',1,5,430,' imgs/ingredients/feta-cheese.png ',1,' Queso fetta ',' Delicioso queso fetta ideal para ensaladas mediterraneas '),
+                        ('Hielos ',4,4,60,' imgs/ingredients/ ',6,' Hielo en cubos ',' Hielo en cubo para refrescar bebidas o preparar bebidas frapeadas '),
+                        ('Bowl grande ',2,6,50,' imgs/ingredients/ ',6,' Bowl deshechable grande ',' Bowl deshechable biodegradable para empacar alimentos '),
+                        ('Aceite de oliva ',1,4,299,' imgs/ingredients/ ',5,' Botella de aceite de oliva de 750ml ',' Aceite de oliva extra virgen extraido en frio de muy alta calidad '),
+                        ('Queso panela ',1,4,90,' imgs/ingredients/ ',1,' Queso panela fresco ',' Queso fresco ideal para ensaladas frescas ');
