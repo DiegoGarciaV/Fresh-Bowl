@@ -7,13 +7,14 @@ import jakarta.persistence.Id;
 
 @Entity(name = "units")
 public class Unit {
-
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int unitId;
     private String unitName;
     private boolean unitType;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     public int getUnitId() {
         return unitId;
     }

@@ -10,13 +10,15 @@ public class ProductType {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ProductTypeId;
+    private int productTypeId;
+    
     private String typeName;
+
     public int getProductTypeId() {
-        return ProductTypeId;
+        return productTypeId;
     }
     public void setProductTypeId(int productTypeId) {
-        ProductTypeId = productTypeId;
+        this.productTypeId = productTypeId;
     }
     public String getTypeName() {
         return typeName;

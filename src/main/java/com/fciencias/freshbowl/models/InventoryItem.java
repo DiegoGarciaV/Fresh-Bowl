@@ -1,11 +1,17 @@
 package com.fciencias.freshbowl.models;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class InventoryItem {
@@ -13,6 +19,7 @@ public class InventoryItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int itemId;
+    @NotNull(message = "No se ha informado el nombre del producto")
     protected String name;
     @ManyToOne
     @JoinColumn(name="item_type")
@@ -23,11 +30,24 @@ public class InventoryItem {
     @JoinColumn(name="unit")
     protected Unit unit;
     protected String img;
-    protected String acquisitionDate;
-    protected String expiryDate;
+    @NotNull(message = "No se ha informado fecha de adquisicion.")
+    protected LocalDate acquisitionDate;
+    @NotNull(message = "No se ha informado fecha de caducidad.")
+    @FutureOrPresent(message = "La fecha de caducidad debe ser en el futuro o en el presente")
+    protected LocalDate expiryDate;
     protected String description;
     protected String comments;
+    @NotBlank(message = "No se ha informado proveedor.")
     protected String provider;
+
+
+    @AssertTrue(message = "La fecha de caducidad debe ser posterior a la fecha de adquisicion.")
+    public boolean isAcquisitionAfterExpiry() {
+        if (acquisitionDate == null || expiryDate == null) {
+            return true;
+        }
+        return expiryDate.isAfter(acquisitionDate);
+    }
 
     public int getItemId() {
         return itemId;
@@ -35,10 +55,10 @@ public class InventoryItem {
     public void setItemId(int itemId) {
         this.itemId = itemId;
     }
-    public String getItemName() {
+    public String getName() {
         return name;
     }
-    public void setItemName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
     public ProductType getItemType() {
@@ -71,16 +91,16 @@ public class InventoryItem {
     public void setImg(String img) {
         this.img = img;
     }
-    public String getAcquisitionDate() {
+    public LocalDate getAcquisitionDate() {
         return acquisitionDate;
     }
-    public void setAcquisitionDate(String acquisitionDate) {
+    public void setAcquisitionDate(LocalDate acquisitionDate) {
         this.acquisitionDate = acquisitionDate;
     }
-    public String getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
     public String getDescription() {
