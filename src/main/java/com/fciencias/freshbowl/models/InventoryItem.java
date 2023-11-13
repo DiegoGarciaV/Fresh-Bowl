@@ -19,14 +19,17 @@ public class InventoryItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int itemId;
     @NotNull(message = "No se ha informado el nombre del producto")
+    @NotBlank(message = "No se ha informado el nombre del producto")
     private String name;
     @ManyToOne
     @JoinColumn(name="item_type")
+    @NotNull(message = "No se ha informado el tipo del producto")
     private ProductType itemType;
     private int quantity;
     private double price;
     @ManyToOne
     @JoinColumn(name="unit")
+    @NotNull(message = "No se ha informado unidad de medida")
     private Unit unit;
     private String img;
     @NotNull(message = "No se ha informado fecha de adquisicion.")
@@ -40,6 +43,8 @@ public class InventoryItem {
 
     @AssertTrue(message = "No se ha informado fecha de caducidad para producto perecedero")
     public boolean isPerishable() {
+        if(itemType == null)
+            return false;
         if (itemType.getTypeName() == "Perecedero") {
             System.out.println(itemType.getTypeName());
             return expiryDate != null;
@@ -48,11 +53,14 @@ public class InventoryItem {
         return true;
     }
 
-    @AssertTrue(message = "La fecha de caducidad debe ser posterior a la fecha de adquisicion.")
+    @AssertTrue(message = "La fecha de caducidad debe informarse y ser posterior a la fecha de adquisicion.")
     public boolean isAcquisitionAfterExpiry() {
-        if (itemType.getTypeName() != "Perecedero") {
+        if (itemType != null && itemType.getTypeName() != "Perecedero") {
             return true;
         }
+        if(expiryDate == null)
+            return false;
+
         return expiryDate.isAfter(acquisitionDate);
     }
 
