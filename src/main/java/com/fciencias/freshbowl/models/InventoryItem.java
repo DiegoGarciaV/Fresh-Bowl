@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,34 +17,50 @@ public class InventoryItem {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int itemId;
+    private int itemId;
     @NotNull(message = "No se ha informado el nombre del producto")
-    protected String name;
+    @NotBlank(message = "No se ha informado el nombre del producto")
+    private String name;
     @ManyToOne
     @JoinColumn(name="item_type")
-    protected ProductType itemType;
-    protected int quantity;
-    protected double price;
+    @NotNull(message = "No se ha informado el tipo del producto")
+    private ProductType itemType;
+    private int quantity;
+    private double price;
     @ManyToOne
     @JoinColumn(name="unit")
-    protected Unit unit;
-    protected String img;
+    @NotNull(message = "No se ha informado unidad de medida")
+    private Unit unit;
+    private String img;
     @NotNull(message = "No se ha informado fecha de adquisicion.")
-    protected LocalDate acquisitionDate;
-    @NotNull(message = "No se ha informado fecha de caducidad.")
-    @FutureOrPresent(message = "La fecha de caducidad debe ser en el futuro o en el presente")
-    protected LocalDate expiryDate;
-    protected String description;
-    protected String comments;
+    private LocalDate acquisitionDate;
+    private LocalDate expiryDate;
+    private String description;
+    private String comments;
     @NotBlank(message = "No se ha informado proveedor.")
-    protected String provider;
+    private String provider;
 
 
-    @AssertTrue(message = "La fecha de caducidad debe ser posterior a la fecha de adquisicion.")
+    @AssertTrue(message = "No se ha informado fecha de caducidad para producto perecedero")
+    public boolean isPerishable() {
+        if(itemType == null)
+            return false;
+        if (itemType.getTypeName() == "Perecedero") {
+            System.out.println(itemType.getTypeName());
+            return expiryDate != null;
+        }
+        expiryDate = null;
+        return true;
+    }
+
+    @AssertTrue(message = "La fecha de caducidad debe informarse y ser posterior a la fecha de adquisicion.")
     public boolean isAcquisitionAfterExpiry() {
-        if (acquisitionDate == null || expiryDate == null) {
+        if (itemType != null && itemType.getTypeName() != "Perecedero") {
             return true;
         }
+        if(expiryDate == null)
+            return false;
+
         return expiryDate.isAfter(acquisitionDate);
     }
 

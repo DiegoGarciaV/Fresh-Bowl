@@ -101,3 +101,29 @@ VALUES                  ('Lechuga ',1,20,20.5,' imgs/ingredients/letuce.png ',1,
                         ('Bowl grande ',2,6,50,' imgs/ingredients/ ',6,' Bowl deshechable grande ',' Bowl deshechable biodegradable para empacar alimentos '),
                         ('Aceite de oliva ',1,4,299,' imgs/ingredients/ ',5,' Botella de aceite de oliva de 750ml ',' Aceite de oliva extra virgen extraido en frio de muy alta calidad '),
                         ('Queso panela ',1,4,90,' imgs/ingredients/ ',1,' Queso panela fresco ',' Queso fresco ideal para ensaladas frescas ');
+
+
+DROP TABLE IF EXISTS    user_role;
+
+CREATE TABLE            user_role(
+
+    role_id             INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    role_name           VARCHAR(40) NOT NULL,
+    role_description    VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS    user;
+
+CREATE TABLE            user(
+
+    user_id             INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    username            VARCHAR(40) NOT NULL UNIQUE,
+    first_name          VARCHAR(40),
+    last_name           VARCHAR(40),
+    role_id             INT NOT NULL,
+    img                 VARCHAR(100),
+    last_login          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT          role_fk FOREIGN KEY (role_id) REFERENCES user_role(role_id)
+);
+
+
