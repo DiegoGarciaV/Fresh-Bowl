@@ -64,13 +64,13 @@
                     <h3>Operacion realizada con éxito</h3>
                     <p th:text="${successMessage}"></p>
                 </div>
-                <form class="row g-3 my-2 w-100" method="post" th:object="${item}" action="../inventory/manager" accept-charset="UTF-8">
+                <form class="row g-3 my-2 w-100" method="post" th:object="${item}" action="/inventory/manager" accept-charset="UTF-8">
                     
                     <div class="col-12 col-lg-6">
                         <div class="row">
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-3 mb-3" th:if="${item!= null && item.getItemId() != 0 }">
                                 <label for="itemId" class="form-label">Id</label>
-                                <input type="text" class="form-control" id="itemId" name="itemId" th:value="${initialId}">
+                                <input type="text" class="form-control" id="itemId" name="itemId" th:value="${item.getItemId()}" readonly>
                             </div>
                             <div class="col-md-9 mb-3">
                                 <label for="itemName" class="form-label">Nombre del producto</label>
@@ -97,7 +97,7 @@
                                 <input type="date" class="form-control" id="acquisitionDate" name="acquisitionDate" th:value="${item.getAcquisitionDate()}" >
                                 <p class="form-text text-danger" th:if="${#fields.hasErrors('acquisitionDate')}" th:errors="*{acquisitionDate}"></p>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3" th:if="${item.getItemType().getTypeName() == 'Perecedero' || item.getItemId() == 0 }">
                                 <label for="itemExpiry" class="form-label">Fecha de caducidad</label>
                                 <input type="date" class="form-control" id="expiryDate" name="expiryDate" th:value="${item.getExpiryDate()}" >
                                 <p class="form-text text-danger" th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}"></p>
@@ -122,7 +122,7 @@
                             </div>
 
                             <div class="col-12 mb-3">
-                                <button type="submit" class="btn btn-primary">Sign in</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
                     </div>
