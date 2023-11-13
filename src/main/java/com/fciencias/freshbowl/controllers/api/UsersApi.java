@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,15 @@ public class UsersApi {
     {
         User createdUser = null;
         if(user!= null)
+        {
+            User checkUserById = userRepository.findById(user.getUserId()).orElse(null);
+            User checkUserByUsername = userRepository.findByUsername(user.getUsername());
+
+            if(checkUserById != null || checkUserByUsername != null)
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
+                
             createdUser = userRepository.save(user);
+        }
         else
             return ResponseEntity.badRequest().build();
 
