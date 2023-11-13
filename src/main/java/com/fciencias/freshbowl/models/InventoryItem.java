@@ -18,27 +18,27 @@ public class InventoryItem {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int itemId;
+    private int itemId;
     @NotNull(message = "No se ha informado el nombre del producto")
-    protected String name;
+    private String name;
     @ManyToOne
     @JoinColumn(name="item_type")
-    protected ProductType itemType;
-    protected int quantity;
-    protected double price;
+    private ProductType itemType;
+    private int quantity;
+    private double price;
     @ManyToOne
     @JoinColumn(name="unit")
-    protected Unit unit;
-    protected String img;
+    private Unit unit;
+    private String img;
     @NotNull(message = "No se ha informado fecha de adquisicion.")
-    protected LocalDate acquisitionDate;
+    private LocalDate acquisitionDate;
     @NotNull(message = "No se ha informado fecha de caducidad.")
     @FutureOrPresent(message = "La fecha de caducidad debe ser en el futuro o en el presente")
-    protected LocalDate expiryDate;
-    protected String description;
-    protected String comments;
+    private LocalDate expiryDate;
+    private String description;
+    private String comments;
     @NotBlank(message = "No se ha informado proveedor.")
-    protected String provider;
+    private String provider;
 
 
     @AssertTrue(message = "La fecha de caducidad debe ser posterior a la fecha de adquisicion.")
