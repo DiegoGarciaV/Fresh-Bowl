@@ -60,7 +60,6 @@ public class InventoryController {
         if(item != null)
         {
             response.addObject("item", item);
-            response.addObject("initialId", item.getItemId());
         }
         else
         {
@@ -82,7 +81,6 @@ public class InventoryController {
         item.setUnit(new Unit());
 
         response.addObject("item", item);
-        response.addObject("initialId", 0);
         return response;
     }
 
@@ -124,23 +122,24 @@ public class InventoryController {
         {
             Unit unit = unitRepository.findByUnitName(item.getUnit().getUnitName());
             item.setUnit(unit);
-
-            System.out.println(item.getItemType().getTypeName());
             ProductType productType = productTypesRepository.findByTypeName(item.getItemType().getTypeName());
-            if(productType!=null)
+            item.setItemType(productType);
+            InventoryItem newItem;
+            if(item.getItemId() == 0)
             {
-                System.out.println(productType.getProductTypeId());
-                System.out.println(productType.getTypeName());
+                System.out.println("Creando registro");
+                newItem = inventoryService.saveInventoryItem(item);
+                System.out.println("Creado: " + newItem.getItemId());
             }
             else
-                System.out.println("Resultado de productType nulo");
-            item.setItemType(productType);
-            InventoryItem newItem = inventoryService.saveInventoryItem(item);
+            {
+                System.out.println("Actualizando registro: " + item.getItemId());
+                newItem = inventoryService.updateInventoryItem(item.getItemId(), item);
+            }
             response.addObject("item", newItem);
             response.addObject("successMessage", "Se ha actualizado exitosamente el articulo");
         }
         
-        response.addObject("initialId",item.getItemId());
         return response;
     }
 

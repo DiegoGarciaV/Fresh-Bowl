@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,8 +31,6 @@ public class InventoryItem {
     private String img;
     @NotNull(message = "No se ha informado fecha de adquisicion.")
     private LocalDate acquisitionDate;
-    @NotNull(message = "No se ha informado fecha de caducidad.")
-    @FutureOrPresent(message = "La fecha de caducidad debe ser en el futuro o en el presente")
     private LocalDate expiryDate;
     private String description;
     private String comments;
@@ -41,9 +38,19 @@ public class InventoryItem {
     private String provider;
 
 
+    @AssertTrue(message = "No se ha informado fecha de caducidad para producto perecedero")
+    public boolean isPerishable() {
+        if (itemType.getTypeName() == "Perecedero") {
+            System.out.println(itemType.getTypeName());
+            return expiryDate != null;
+        }
+        expiryDate = null;
+        return true;
+    }
+
     @AssertTrue(message = "La fecha de caducidad debe ser posterior a la fecha de adquisicion.")
     public boolean isAcquisitionAfterExpiry() {
-        if (acquisitionDate == null || expiryDate == null) {
+        if (itemType.getTypeName() != "Perecedero") {
             return true;
         }
         return expiryDate.isAfter(acquisitionDate);

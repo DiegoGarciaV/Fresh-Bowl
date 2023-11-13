@@ -76,7 +76,7 @@
                                 Fecha de adquisición: <span class="pricing-buttons" th:text="${item.getAcquisitionDate()}"></span>
                             </p>
 
-                            <p class="card-text ">
+                            <p class="card-text " th:if="${item.getItemType().getTypeName() == 'Perecedero'}">
                                 Fecha de caducidad: <span class="pricing-buttons" th:text="${item.getExpiryDate()}"></span>
                             </p>
                             
