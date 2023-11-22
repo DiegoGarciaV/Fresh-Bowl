@@ -1,11 +1,19 @@
 package com.fciencias.freshbowl.controllers.api;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +38,19 @@ public class UsersApi {
     }
 
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable int userId)
+    {
+        User foundUser = userRepository.findById(userId).orElse(null);
+        if(foundUser == null)
+            return ResponseEntity.noContent().build();
+        else
+        {
+           foundUser.setPassword(null);
+            return ResponseEntity.ok(foundUser);
+        }
+    }
+
     @GetMapping("/")
     public ResponseEntity<List<User>> getUsers()
     {
@@ -37,27 +58,54 @@ public class UsersApi {
         if(allUsers.isEmpty())
             return ResponseEntity.noContent().build();
         else
+        {
+            for(User user : allUsers)
+                user.setPassword(null);
             return ResponseEntity.ok(allUsers);
+        }
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> createUser(@RequestBody User user)
+    @Validated
+    public ResponseEntity<Object> createUser(@RequestBody @Valid User user, BindingResult bindingResult)
     {
         User createdUser = null;
+        if (bindingResult.hasErrors()) 
+        {
+            Map<String,Object> errorMessage = new HashMap<>();
+            Map<String,Object> constraintsViolations = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) 
+                constraintsViolations.put(error.getField(), error.getDefaultMessage());
+
+            errorMessage.put("errors", constraintsViolations);
+            errorMessage.put("User", user);
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+
         if(user!= null)
         {
+
             User checkUserById = userRepository.findById(user.getUserId()).orElse(null);
             User checkUserByUsername = userRepository.findByUsername(user.getUsername());
 
             if(checkUserById != null || checkUserByUsername != null)
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(user);
+            {
+                Map<String,Object> errorMessage = new HashMap<>();
+                errorMessage.put("errors", "Usuario ya existente");
+                errorMessage.put("User", user);
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+            }
                 
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
             createdUser = userRepository.save(user);
+            createdUser.setPassword(null);
+            return ResponseEntity.created(URI.create("/api/users/" + createdUser.getUserId())).build();
         }
         else
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("El usuario no puede ser nulo");
 
-        return ResponseEntity.created(URI.create("/api/users/" + createdUser.getUserId())).build();
         
     }
 
@@ -65,7 +113,11 @@ public class UsersApi {
     public ResponseEntity<User> updateUser(@RequestBody User user)
     {
         if(userRepository.findById(user.getUserId()).orElse(null) != null)
-           return ResponseEntity.ok(userRepository.save(user));
+        {
+            User updatedUser = userRepository.save(user);
+            updatedUser.setPassword(null);
+            return ResponseEntity.ok(updatedUser);
+        }
         else
             return ResponseEntity.notFound().build();
     }

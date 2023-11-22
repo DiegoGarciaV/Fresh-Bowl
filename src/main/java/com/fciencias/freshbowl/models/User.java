@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class User {
@@ -21,6 +22,11 @@ public class User {
     @NotNull(message = "No se ha informado el nombre de usuario")
     @NotBlank(message = "No se ha informado el nombre de usuario")
     private String username;
+
+    @NotNull(message = "No se ha informado contrasenia")
+    @NotBlank(message = "La contrasenia no puede ir vacia")
+    @Size(min = 8, max = 60, message = "La contraseña debe tener entre 8 y 20 caracteres")
+    private String password;
 
     private String firstName;
 
@@ -51,6 +57,8 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+   
 
     public String getFirstName() {
         return firstName;
@@ -90,6 +98,14 @@ public class User {
 
     public void setLastLogin(LocalDate lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     
