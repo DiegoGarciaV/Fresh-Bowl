@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>The Fresh Bowl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index/style.css">
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-light">
+
+    <header>
+        <nav class="navbar fixed-top navbar-dark bg-success navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">
+                    <div class="img-panel" id="logo-panel">
+                        <img src="/imgs/logo-w.png" alt="" class="d-inline-block align-text-top">
+                    </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-options"
+                    aria-controls="nav-options" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="nav-options">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 justify-content-end">
+                        <li class="nav-item text-center">
+                            <a class="nav-link active" href="#menu">Menú</a>
+                        </li>
+                        <li class="nav-item text-center">
+                            <a class="nav-link" aria-current="page" href="/recipes">Recetas</a>
+                        </li>
+                        <li class="nav-item text-center">
+                            <a class="nav-link" href="/inventory">Inventario</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    
+    <div class="full-container screen-container full-screen-container-static">
+        <h1 class="text-center">
+            Crea tu propia ensalada!!
+        </h1>
+        <div class="row">
+            <div class="col col-12 col-9-md col-6-xl text-center">
+                <video id="videoPlayer" width="640" height="360" controls>
+                    <source src="/tutorials/double_door" type="video/mp4">
+                    Tu navegador no soporta la reproducción de videos.
+                    <track label="Español" kind="captions" srclang="es" src="" default>
+                </video>
+                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-12 col-9-md col-6-xl text-center">
+                <video id="videoPlayer" width="640" height="360" controls>
+                    <source src="/tutorials/double_storm" type="video/mp4">
+                    Tu navegador no soporta la reproducción de videos.
+                    <track label="Español" kind="captions" srclang="es" src="" default>
+                </video>
+                
+            </div>
+        </div>
+    </div>
+    
+    <footer></footer>
+</body>
+
+
+</html>
