@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fciencias.freshbowl.models.ApiResponse;
+import com.fciencias.freshbowl.models.LoginModel;
 import com.fciencias.freshbowl.models.User;
 import com.fciencias.freshbowl.services.users.UserRepository;
 
@@ -31,6 +33,8 @@ import com.fciencias.freshbowl.services.users.UserRepository;
 public class UsersApi {
 
     private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UsersApi(UserRepository userRepository) {
@@ -95,8 +99,7 @@ public class UsersApi {
                 errorMessage.put("User", user);
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
             }
-                
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            
             String hashedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashedPassword);
             createdUser = userRepository.save(user);
@@ -131,5 +134,51 @@ public class UsersApi {
         userRepository.deleteById(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping(value ="/login", consumes = "application/x-www-form-urlencoded")
+    public ResponseEntity<ApiResponse> validateUser(LoginModel login)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+        if(login.getUsername() == null)
+        {
+            apiResponse.setResultMessage("No se ha informado nombre de usuario.");
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        if(login.getPassword() == null)
+        {
+            apiResponse.setResultMessage("No se ha informado contrasenia.");
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        if(login.getUsername().isBlank() || login.getUsername().isEmpty())
+        {
+            apiResponse.setResultMessage("El nombre de usuario no puede ser vacio");
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        if(login.getPassword().isBlank() || login.getPassword().isEmpty())
+        {
+            apiResponse.setResultMessage("La contrasenia debe tener al menos 8 caracteres");
+            return ResponseEntity.badRequest().body(apiResponse);
+        }
+
+        User requestedUser = userRepository.findByUsername(login.getUsername());
+        if(requestedUser != null)
+        {
+            boolean authUser = passwordEncoder.matches(login.getPassword(), requestedUser.getPassword());
+            apiResponse.setResultState(authUser);
+            if(authUser)
+            {
+                apiResponse.setResultMessage("Usuario verificado.");
+                return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+            }
+        }
+        apiResponse.setResultMessage("Usuario o contrasenia incorrectos");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+
+        
+    }
+    
     
 }
