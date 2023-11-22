@@ -28,3 +28,5 @@ mvnw*
 .vscode
 .env
 target
+
+*.mp4
