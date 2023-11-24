@@ -2,8 +2,8 @@ package com.fciencias.freshbowl.models;
 
 public class LoginModel {
     
-    String username;
-    String password;
+    private String username;
+    private String password;
     
     public String getUsername() {
         return username;
@@ -17,6 +17,7 @@ public class LoginModel {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
     
 }
