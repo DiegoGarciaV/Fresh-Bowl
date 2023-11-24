@@ -127,3 +127,13 @@ CREATE TABLE            user(
 );
 
 
+DROP TABLE IF EXISTS    resource_access;
+
+CREATE TABLE            resource_access(
+
+    resource_id         INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    resource_url        VARCHAR(40) NOT NULL UNIQUE,
+    role_id             INT NOT NULL,
+    access_type         INT NOT NULL DEFAULT 0,
+    CONSTRAINT          role_access_fk FOREIGN KEY (role_id) REFERENCES user_role(role_id)
+);

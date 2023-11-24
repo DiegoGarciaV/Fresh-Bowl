@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,81 +31,71 @@ public class LoginController {
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
-    @GetMapping(value={"/","","index","home"})
-    public ModelAndView home()
-    {
+
+    @GetMapping(value = { "/", "", "index", "home" })
+    public ModelAndView home() {
         return new ModelAndView("index");
     }
 
-
-    @GetMapping(value={"login/","login"})
-    public ModelAndView login(@ModelAttribute("requestedUrl") String redirectUrl)
-    {
+    @GetMapping(value = { "login/", "login" })
+    public ModelAndView login(@RequestParam(name = "requestedUrl", required = false) String redirectUrl) {
         ModelAndView response = new ModelAndView("login");
-        if(redirectUrl != null && !redirectUrl.isEmpty())
-            response.addObject("requestedResource",redirectUrl);
+        if (redirectUrl != null && !redirectUrl.isEmpty())
+            response.addObject("requestedResource", redirectUrl);
         else
-            response.addObject("requestedResource","");
-        
+            response.addObject("requestedResource", "");
+
         return response;
     }
 
-    @PostMapping(value ={"login/form","login/form/"}, consumes = "application/x-www-form-urlencoded")
-    public ModelAndView loginUser(LoginModel login, Model model, HttpServletResponse response)
-    {
-        Map<String,Object> authToken = new HashMap<>();
-        final int TOKEN_DURATION = 60*30;
+    @PostMapping(value = { "login/form", "login/form/" }, consumes = "application/x-www-form-urlencoded")
+    public ModelAndView loginUser(LoginModel login, Model model, HttpServletResponse response) {
+        Map<String, Object> authToken = new HashMap<>();
+        final int TOKEN_DURATION = 60 * 30;
 
-        if(login.getUsername() == null)
-        {
-            model.addAttribute("message","No se ha informado nombre de usuario.");
+        if (login.getUsername() == null) {
+            model.addAttribute("message", "No se ha informado nombre de usuario.");
             return new ModelAndView("inventory/index");
         }
 
-        if(login.getPassword() == null)
-        {
-            model.addAttribute("message","No se ha informado contrasenia.");
+        if (login.getPassword() == null) {
+            model.addAttribute("message", "No se ha informado contrasenia.");
             return new ModelAndView("inventory/index");
         }
 
-        if(login.getUsername().isBlank() || login.getUsername().isEmpty())
-        {
-            model.addAttribute("message","El nombre de usuario no puede ser vacio");
+        if (login.getUsername().isBlank() || login.getUsername().isEmpty()) {
+            model.addAttribute("message", "El nombre de usuario no puede ser vacio");
             return new ModelAndView("inventory/index");
         }
 
-        if(login.getPassword().isBlank() || login.getPassword().isEmpty())
-        {
-            model.addAttribute("message","La contrasenia debe tener al menos 8 caracteres");
+        if (login.getPassword().isBlank() || login.getPassword().isEmpty()) {
+            model.addAttribute("message", "La contrasenia debe tener al menos 8 caracteres");
             return new ModelAndView("inventory/index");
         }
 
         User requestedUser = userRepository.findByUsername(login.getUsername());
-        if(requestedUser != null)
-        {
+        if (requestedUser != null) {
             boolean authUser = passwordEncoder.matches(login.getPassword(), requestedUser.getPassword());
-            if(authUser)
-            {
+            if (authUser) {
                 authToken.put("username", login.getUsername());
                 authToken.put("role", requestedUser.getRole().getRoleId());
                 authToken.put("expires", (System.currentTimeMillis() + TOKEN_DURATION));
                 String valuesComponent = TokenGenerator.mapToString(authToken);
                 String authSignature = TokenGenerator.generateToken(authToken);
-                
-                String token = TokenGenerator.encodeToken(valuesComponent) + "." + TokenGenerator.encodeToken(authSignature);
-                Cookie cookie = new Cookie("auth-token",token);
+
+                String token = TokenGenerator.encodeToken(valuesComponent) + "."
+                        + TokenGenerator.encodeToken(authSignature);
+                Cookie cookie = new Cookie("auth-token", token);
                 cookie.setMaxAge(TOKEN_DURATION);
-                cookie.setPath("/"); 
+                cookie.setPath("/");
                 response.addCookie(cookie);
                 String redirectUrl = "/" + login.getRequestedResource();
                 return new ModelAndView("redirect:" + redirectUrl);
             }
         }
-        model.addAttribute("message","Usuario o contrasenia incorrectos");
+        model.addAttribute("message", "Usuario o contrasenia incorrectos");
         return new ModelAndView("inventory/index");
 
-        
     }
 
 }
