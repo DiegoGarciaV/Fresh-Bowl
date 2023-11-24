@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>The Fresh Bowl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index/style.css">
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-light">
+
+    <header>
+        <nav class="navbar fixed-top navbar-dark bg-success navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <div class="img-panel" id="logo-panel">
+                        <img src="/imgs/logo-w.png" alt="" class="d-inline-block align-text-top">
+                    </div>
+                </a>
+                
+            </div>
+        </nav>
+    </header>
+    <div class="full-container screen-container">
+        <form class="row g-3 my-2 w-100" method="post" action="/login/form" accept-charset="UTF-8">
+                    
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="username-input" class="form-label">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="username-input" name="username">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3" >
+                    <label for="password-input" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password-input" name="password">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <input type="text" class="form-control" id="requested-resource-input" name="requestedResource"  th:value='${requestedResource}'>
+                </div>
+            </div>
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+        <p>
+            <span th:text="${requestedResource}"></span>
+        </p>
+    </div>
+    
+</body>
+</html>
