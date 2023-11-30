@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>The Fresh Bowl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/index/style.css">
+    <script src="/js/bootstrap/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-light">
+
+    <header>
+        <nav class="navbar fixed-top navbar-dark bg-success navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    <div class="img-panel" id="logo-panel">
+                        <img src="/imgs/logo-w.png" alt="" class="d-inline-block align-text-top">
+                    </div>
+                </a>
+
+            </div>
+        </nav>
+    </header>
+    <div class="full-container screen-container full-screen-container-static" id="cover-container">
+
+        <div class="title-container">
+            <h1 class="text-light">THE FRESH BOWL</h1>
+            <p class="text-light">RESTRINGIDO</p>
+        </div>
+        <div class="container" id="main-options">
+            <div class="row justify-content-center text-center">
+                <div class="col col-12 col-lg-3">
+                    <p>Ups, parece ser que no cuentas con acceso al recurso solicitado.</p>
+                    <p>Ups, parece ser que no cuentas con acceso al recurso solicitado.</p>
+                    <p>Es posible que tu sesión haya caducado, intenta <a
+                            href='/login?requestedUrl=${"requested-resource"}'>iniciar
+                            sesión</a> para acceder a los recursos.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

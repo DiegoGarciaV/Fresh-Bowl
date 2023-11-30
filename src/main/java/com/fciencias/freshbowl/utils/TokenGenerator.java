@@ -40,7 +40,8 @@ public class TokenGenerator {
     }
 
     public static Map<String, String> decodeToken(String encodedToken) {
-        String[] tokenComponens = encodedToken.split(".");
+
+        String[] tokenComponens = encodedToken.split("\\.");
         if (tokenComponens.length != 2)
             return null;
 

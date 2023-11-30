@@ -30,14 +30,23 @@ public class AuthValidator implements HandlerInterceptor {
         String url = request.getRequestURI();
 
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+        flashMap.put("testData", "Datos de prueba con flashMap");
         flashMap.put("requestedUrl", url);
 
         if (url.contains("login") || url.contains(".css") || url.contains(".js") || url.contains("/imgs")
-                || url.equals("/"))
+                || url.equals("/") || url.contains("/favicon.ico") || url.contains("/error")
+                || url.contains("/restricted"))
             return true;
 
+        System.out.println("Validación de acceso en proceso");
+        System.out.println("Recurso solicitado: " + url);
         Cookie[] cookies = request.getCookies();
+
+        System.out.println("Obtencion de cookies");
+
         if (cookies == null) {
+            System.out.println("No hay datos de sesión. Se redirecciona a login");
+            flashMap.put("message", "Tu sesión ha caducado, debes iniciar sesión.");
             try {
 
                 response.sendRedirect("/login?requestedUrl=" + url);
@@ -56,10 +65,14 @@ public class AuthValidator implements HandlerInterceptor {
                 authData = cookie.getValue();
         }
 
+        System.out.println("Credenciales obtenidas");
+
         Map<String, String> tokenData = TokenGenerator.decodeToken(authData);
         if (tokenData == null) {
+            System.out.println("Credenciales inexistentes");
+            flashMap.put("message", "Tu sesión ha caducado, debes iniciar sesión.");
             try {
-                response.sendRedirect("/login");
+                response.sendRedirect("/login?requestedUrl=" + url);
                 return false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -70,21 +83,24 @@ public class AuthValidator implements HandlerInterceptor {
         UserRole role = new UserRole();
         role.setRoleId(Integer.parseInt(tokenData.get("role")));
 
+        System.out.println("Validando premisos al recurso solicitado");
         ResourceAccess resourceAccess = resourceRepository.findByResourceUrlAndRoleId(url, role);
-
+        System.out.println(validation ? "SUCCESSFULL" : "FORBIDEN");
         validation = (resourceAccess != null);
 
-        String resource = validation ? url : "/login";
+        String resource = url;
 
         if (!validation) {
 
             System.out.println("Validacion fallida. Redireccion al login, se indica recurso solicitado.");
+            resource = "/restricted";
         } else
             System.out.println("Validacion exitosa. Redireccion al recurso solicitado.");
 
         try {
             response.sendRedirect(resource);
-            flashMap.remove("requestedUrl");
+            if (validation)
+                flashMap.remove("requestedUrl");
             return validation;
         } catch (IOException e) {
             e.printStackTrace();

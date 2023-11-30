@@ -20,13 +20,13 @@
                         <img src="/imgs/logo-w.png" alt="" class="d-inline-block align-text-top">
                     </div>
                 </a>
-                
+
             </div>
         </nav>
     </header>
     <div class="full-container screen-container">
         <form class="row g-3 my-2 w-100" method="post" action="/login/form" accept-charset="UTF-8">
-                    
+
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="username-input" class="form-label">Nombre de usuario</label>
@@ -34,14 +34,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3 mb-3" >
+                <div class="col-md-3 mb-3">
                     <label for="password-input" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password-input" name="password">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3 mb-3">
-                    <input type="text" class="form-control" id="requested-resource-input" name="requestedResource"  th:value='${requestedResource}'>
+                    <input type="hidden" class="form-control" id="requested-resource-input" name="requestedResource"
+                        th:value='${requestedResource}'>
                 </div>
             </div>
             <div class="col-12 mb-3">
@@ -49,9 +50,14 @@
             </div>
         </form>
         <p>
-            <span th:text="${requestedResource}"></span>
+            <span th:text="${message}"></span>
+        </p>
+
+        <p>
+            Test: <span th:text="${testData}"></span>
         </p>
     </div>
-    
+
 </body>
+
 </html>

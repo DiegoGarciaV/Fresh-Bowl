@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,20 @@ public class LoginController {
     }
 
     @GetMapping(value = { "login/", "login" })
-    public ModelAndView login(@RequestParam(name = "requestedUrl", required = false) String redirectUrl) {
+    public ModelAndView login(@RequestParam(name = "requestedUrl", required = false) String redirectUrl,
+            @ModelAttribute("testData") String testData) {
+        ModelAndView response = new ModelAndView("login");
+        response.addObject("testData", testData);
+        if (redirectUrl != null && !redirectUrl.isEmpty())
+            response.addObject("requestedResource", redirectUrl);
+        else
+            response.addObject("requestedResource", "");
+
+        return response;
+    }
+
+    @GetMapping(value = { "restricted/", "restricted" })
+    public ModelAndView restricted(@RequestParam(name = "requestedUrl", required = false) String redirectUrl) {
         ModelAndView response = new ModelAndView("login");
         if (redirectUrl != null && !redirectUrl.isEmpty())
             response.addObject("requestedResource", redirectUrl);
@@ -55,22 +69,22 @@ public class LoginController {
 
         if (login.getUsername() == null) {
             model.addAttribute("message", "No se ha informado nombre de usuario.");
-            return new ModelAndView("inventory/index");
+            return new ModelAndView("login?requestedUrl=" + login.getRequestedResource());
         }
 
         if (login.getPassword() == null) {
             model.addAttribute("message", "No se ha informado contrasenia.");
-            return new ModelAndView("inventory/index");
+            return new ModelAndView("login?requestedUrl=" + login.getRequestedResource());
         }
 
         if (login.getUsername().isBlank() || login.getUsername().isEmpty()) {
             model.addAttribute("message", "El nombre de usuario no puede ser vacio");
-            return new ModelAndView("inventory/index");
+            return new ModelAndView("login?requestedUrl=" + login.getRequestedResource());
         }
 
         if (login.getPassword().isBlank() || login.getPassword().isEmpty()) {
             model.addAttribute("message", "La contrasenia debe tener al menos 8 caracteres");
-            return new ModelAndView("inventory/index");
+            return new ModelAndView("login?requestedUrl=" + login.getRequestedResource());
         }
 
         User requestedUser = userRepository.findByUsername(login.getUsername());
@@ -94,7 +108,7 @@ public class LoginController {
             }
         }
         model.addAttribute("message", "Usuario o contrasenia incorrectos");
-        return new ModelAndView("inventory/index");
+        return new ModelAndView("login?requestedUrl=" + login.getRequestedResource());
 
     }
 
